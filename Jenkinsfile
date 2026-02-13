@@ -31,9 +31,8 @@ pipeline {
 
         stage('Approval for Production') {
             when { branch 'main' }
-            input {
-                message "Approve Production Deployment?"
-                ok "Deploy"
+            steps {
+                input message: "Approve Production Deployment?", ok: "Deploy"
             }
         }
 
@@ -64,6 +63,15 @@ pipeline {
                 docker run -d --name company-app company-app:${BUILD_NUMBER}
                 '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo "Deployment completed successfully"
+        }
+        failure {
+            echo "Deployment failed"
         }
     }
 }
